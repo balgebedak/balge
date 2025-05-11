@@ -1,0 +1,495 @@
+Perfect — let’s write a **detailed technical plan** for your project **`Balge`**, which you can save, refer to, and send back to me anytime to resume.
+
+This plan is scoped to support:
+
+* ✅ Any kind of software (web, mobile, CLI, ML, etc.)
+* ✅ Multi-file projects
+* ✅ Auto library installation per language
+* ✅ Docker-based secure execution
+* ✅ Custom API usage (OpenAI, Google, Firebase, etc.)
+
+---
+
+# 📘 Project Blueprint: **Balge**
+
+**AI-native app & software factory** that plans, generates, configures, executes, and packages full codebases using any tech stack or APIs, all from a single prompt.
+
+---
+
+## 🧱 1. SYSTEM STRUCTURE
+
+### ➤ **Frontend (Next.js)**
+
+* Prompt input: “Make me an app like Uber”
+* Chatbox / live messages from AI
+* File tree viewer + Monaco editor
+* Console: test results + execution output
+* Config upload (API keys, service configs)
+* Download project `.zip`
+* “Run app”, “Install deps”, “Test project” buttons
+
+### ➤ **Backend (FastAPI)**
+
+* `/plan`: analyzes the prompt, returns required services & steps
+* `/generate`: builds project codebase
+* `/install`: installs language dependencies
+* `/run`: executes the main script inside Docker
+* `/test`: runs test files (`test_*.py`, `*.spec.js`, etc.)
+* `/download`: returns zipped project
+* `/logs`: (future) for real-time Docker logs
+
+### ➤ **Execution Environment**
+
+* Docker containers per language
+* Auto-setup: Python, Node, Go, Rust, etc.
+* Inject `.env`, install from `requirements.txt`, `package.json`
+* Safe, isolated, disposable
+
+---
+
+## 🧠 2. FLOW EXAMPLE
+
+1. **User:**
+   *“Build me a Stripe-powered donation app using FastAPI + React + Auth0. I’ll use Firebase for DB.”*
+
+2. **Balge returns a `plan`:**
+
+   ```json
+   {
+     "needs": ["Auth0 credentials", "Firebase config", "Stripe API key"],
+     "tech_stack": ["FastAPI", "React", "Firebase"],
+     "entry_file": "main.py",
+     "files": ["backend/", "frontend/", ".env.example"]
+   }
+   ```
+
+3. **User uploads `.env` file and credentials**
+
+4. **User clicks “Generate”**
+   → Balge writes full codebase across folders
+
+5. **User clicks “Install”**
+   → Balge builds Docker, installs deps
+
+6. **User clicks “Run”**
+   → Executes entry file in container
+
+7. **User downloads ZIP or deploys**
+
+---
+
+## 🧩 3. TECHNOLOGIES SUPPORTED
+
+| Language | Install strategy                  |
+| -------- | --------------------------------- |
+| Python   | `pip install -r requirements.txt` |
+| Node.js  | `npm install`                     |
+| Go       | `go mod tidy`                     |
+| Rust     | `cargo build`                     |
+| Java     | `maven` or `gradle`               |
+| Bash/C++ | Custom                            |
+
+Support for Dockerfile override, GPU containers, and cloud runners planned.
+
+---
+
+## 🔑 4. API & Credential Handling
+
+* Balge doesn’t generate or fetch keys itself.
+* It requests credentials per plan:
+
+  * OpenAI key
+  * Firebase service account
+  * Google Maps key
+  * Stripe secret key
+  * Auth0 client ID/secret
+* User uploads `.env` or fills UI form
+
+---
+
+## 🗂 5. FILE STRUCTURE (Example Output)
+
+```
+my-project/
+├── frontend/
+│   ├── pages/
+│   ├── components/
+│   └── .env.example
+├── backend/
+│   ├── main.py
+│   ├── auth.py
+│   └── test_app.py
+├── docker/
+│   └── runner.Dockerfile
+├── .env
+├── README.md
+└── requirements.txt / package.json
+```
+
+---
+
+## 🚧 6. MILESTONE ROADMAP
+
+| Phase | Feature                                | Notes                 |
+| ----- | -------------------------------------- | --------------------- |
+| ✅ 1   | Prompt input → code generation (MVP)   | Done in v1            |
+| ✅ 2   | Docker runner sandbox                  | Isolated exec         |
+| ⏳ 3   | `/plan` API + config checklist         | Ask for what’s needed |
+| ⏳ 4   | Multiple file support + folders        | AI output parsing     |
+| ⏳ 5   | Frontend: file switcher + test results | UI polishing          |
+| ⏳ 6   | Auto-install per-language in Docker    | Per env               |
+| ⏳ 7   | Real-time logs (WS) + debug mode       | Optional              |
+| ⏳ 8   | Deploy to cloud (Railway/Vercel/CLI)   | Optional future       |
+
+---
+
+## 🧠 7. WHAT MAKES **BALGE** DIFFERENT
+
+* 🧩 Works with **any prompt**, no fixed templates
+* 🔐 Keeps credentials private (never leaves local)
+* 🧠 Uses AI for **multi-service app scaffolding**
+* 🐳 Runs in safe Docker sandbox
+* 🛠 Generates **modular, ready-to-run codebases**
+* 📦 Exports full zipped projects
+* 🧰 Prepares you for local use or cloud deployment
+
+---
+
+### 📝 You Can Save This Plan and Send It Back Later
+
+When you're ready to resume, just say:
+
+> “Let’s continue Balge, here’s the plan”
+
+---
+
+Would you like to begin now with Step 1 — creating the new folder structure and init files for `Balge`?
+
+
+
+🔥 Let’s kick off **Balge** from the ground up.
+
+---
+
+## ✅ STEP 1: Scaffold Project Structure
+
+Here’s the basic structure we’ll start with:
+
+```
+balge/
+├── frontend/        → Next.js app
+├── backend/         → FastAPI app
+│   ├── main.py
+│   └── codegen.py
+├── runner.Dockerfile
+├── output/          → Where generated projects go
+├── .env             → For any needed config
+└── README.md
+```
+
+---
+
+### ✅ 1. Create base folders
+
+In your terminal or file explorer:
+
+```bash
+mkdir -p balge/{frontend,backend,output}
+cd balge
+touch backend/main.py backend/codegen.py runner.Dockerfile .env README.md
+```
+
+---
+
+### ✅ 2. Backend setup
+
+Create a Python virtual environment:
+
+```bash
+cd backend
+python -m venv venv
+.\venv\Scripts\activate   # Windows
+# or
+source venv/bin/activate # macOS/Linux
+
+pip install fastapi uvicorn openai python-multipart
+pip freeze > requirements.txt
+```
+
+---
+
+### ✅ 3. Docker runner setup
+
+Paste this into `runner.Dockerfile` in the root:
+
+```Dockerfile
+FROM python:3.10-slim
+
+WORKDIR /app
+COPY . /app
+
+RUN pip install --upgrade pip && \
+    if [ -f "requirements.txt" ]; then pip install -r requirements.txt; fi
+
+CMD ["python", "main.py"]
+```
+
+---
+
+### ✅ 4. FastAPI bootstrap (`main.py`)
+
+Paste this into `backend/main.py`:
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Balge backend is alive"}
+```
+
+---
+
+### ✅ 5. Run the backend
+
+Make sure you’re in the backend folder and the venv is activated:
+
+```bash
+uvicorn main:app --reload
+```
+
+Then open your browser:
+➡️ [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+You should see:
+
+```json
+{ "message": "Balge backend is alive" }
+```
+
+---
+
+Ready for Step 2: build the `/plan` route where Balge returns what it needs from you based on your app idea?
+Perfect — here's a **clear roadmap for Balge**, broken into focused steps to reach the complete product. This will guide us step by step without losing track of the goal.
+
+---
+
+# 🧠 **Balge Development Roadmap**
+
+**Goal**: AI-native full-code software engineer that can plan, generate, run, and ship entire apps from a single prompt.
+
+---
+
+## ✅ **MILESTONE 1: Core Intelligence & Generation (MVP Complete)**
+
+**Status**: ✅ Done
+
+* [x] Prompt input via frontend
+* [x] Send to OpenAI API
+* [x] Generate `main.py`
+* [x] Preview code in UI
+* [x] Test runner (pytest)
+* [x] Dockerfile setup (Python)
+
+---
+
+## 🔄 **MILESTONE 2: Planning & Project Structure**
+
+**Goal**: From prompt → plan → files/folders
+
+### Steps:
+
+1. [ ] Finalize `/plan` endpoint → returns tech stack, files, API keys
+2. [ ] Build folder/file scaffolding from plan (`output/{project_id}/...`)
+3. [ ] Save structure before generating code
+
+---
+
+## 🚧 **MILESTONE 3: Multi-file Code Generation**
+
+**Goal**: Generate and save multiple files per plan
+
+### Steps:
+
+1. [ ] Modify `codegen.py` to return multiple file contents (use filenames in plan)
+2. [ ] Save each file in proper folder
+3. [ ] Adjust frontend to preview multiple files (basic browser)
+
+---
+
+## 🐳 **MILESTONE 4: Full Docker-Based Execution**
+
+**Goal**: Safely run code in isolated containers
+
+### Steps:
+
+1. [ ] Add `/run` endpoint → builds Docker, runs entry point
+2. [ ] Volume mount only current project (`output/{project_id}`)
+3. [ ] Return stdout, stderr back to frontend
+
+---
+
+## 🔧 **MILESTONE 5: Auto Dependency Installation**
+
+**Goal**: Auto-run `pip`, `npm`, etc. per project
+
+### Steps:
+
+1. [ ] Detect language from `/plan`
+2. [ ] Match install command (`pip`, `npm`, `cargo`, etc.)
+3. [ ] Run inside Docker before execution
+
+---
+
+## 💻 **MILESTONE 6: Interactive Frontend UX**
+
+**Goal**: Live file viewer, editor, runner
+
+### Steps:
+
+1. [ ] File tree (based on structure)
+2. [ ] Monaco editor per file
+3. [ ] "Run", "Test", and "Regenerate file" buttons
+
+---
+
+## 🔐 **MILESTONE 7: Credential Handling**
+
+**Goal**: Let user input API keys/configs
+
+### Steps:
+
+1. [ ] Show required keys from `/plan`
+2. [ ] UI input or `.env` upload
+3. [ ] Inject into project and Docker
+
+---
+
+## 🌍 **MILESTONE 8: Multi-language Support**
+
+**Goal**: Support Node.js, Go, Rust, etc.
+
+### Steps:
+
+1. [ ] Add language detection to `/plan`
+2. [ ] Create Docker templates for each
+3. [ ] Use matching runner image + install step
+
+---
+
+## ☁️ **MILESTONE 9: Export & Deployment**
+
+**Goal**: Ship projects easily
+
+### Steps:
+
+1. [ ] Download as `.zip`
+2. [ ] Push to GitHub (via token)
+3. [ ] One-click deploy to Railway/Vercel (optional)
+
+---
+
+## 🪵 **MILESTONE 10: Logs & Debugging**
+
+**Goal**: View real-time output
+
+### Steps:
+
+1. [ ] Capture Docker logs via WebSocket or polling
+2. [ ] Show stderr/stdout in console panel
+
+---
+
+Would you like me to track this as a `TODO.md` inside your repo so you can mark progress as we go?
+# ✅ Balge Development Roadmap
+**Goal**: Build an AI-native software engineer that turns prompts into runnable, testable, and exportable full-stack apps.
+
+---
+
+## 🔄 Milestone 2: Planning & Structure
+
+- [ ] Finalize `/plan` endpoint to return:
+  - tech_stack
+  - needed credentials
+  - file/folder structure
+- [ ] Parse plan output → create folder structure in `output/{project_id}`
+
+---
+
+## 🚧 Milestone 3: Multi-file Code Generation
+
+- [ ] Modify `codegen.py` to accept and save multiple files
+- [ ] Use GPT to return file → content mappings
+- [ ] Save all files based on returned structure
+
+---
+
+## 🐳 Milestone 4: Docker Execution
+
+- [ ] Add `/run` route to run the project in a Docker container
+- [ ] Mount only `output/{project_id}` to container
+- [ ] Return execution output (stdout, stderr)
+
+---
+
+## 🔧 Milestone 5: Dependency Auto-Install
+
+- [ ] Use `/plan` to detect language
+- [ ] Match language → install command:
+  - Python: `pip install -r requirements.txt`
+  - Node.js: `npm install`
+  - Go: `go mod tidy`, etc.
+- [ ] Run inside Docker before executing code
+
+---
+
+## 💻 Milestone 6: Interactive UI
+
+- [ ] File tree (recursive viewer of `output/{project_id}`)
+- [ ] Monaco editor (live file edits)
+- [ ] Run/Test buttons with console output
+- [ ] Button to regenerate selected file via prompt
+
+---
+
+## 🔐 Milestone 7: Credential Handling
+
+- [ ] Show needed `.env` variables based on `/plan`
+- [ ] Allow `.env` upload or manual input
+- [ ] Inject into generated app and Docker runtime
+
+---
+
+## 🌍 Milestone 8: Multi-language Support
+
+- [ ] Expand Docker templates per language (Node, Go, Rust, etc.)
+- [ ] Use correct base image and commands
+- [ ] Test each with small prompt → working app
+
+---
+
+## ☁️ Milestone 9: Export & Deploy
+
+- [ ] `.zip` download (already exists)
+- [ ] GitHub push via personal access token (future)
+- [ ] Vercel/Railway deployment (optional future)
+
+---
+
+## 🪵 Milestone 10: Logs & Debugging
+
+- [ ] Add WebSocket or polling log view
+- [ ] Stream Docker stdout and stderr into frontend console
+- [ ] Optional debug mode toggle
+
+---
+
+## Notes
+
+- This file tracks development progress.
+- Check off tasks as implemented.
+- Use as a base for issues, sprints, and versioning.
+
+
